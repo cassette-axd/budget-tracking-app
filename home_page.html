@@ -1,0 +1,194 @@
+<html>
+    <head>
+        <title>Home Page</title>
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            .topnav {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 60px;
+                width: 100%;
+                background: rgb(56, 55, 55);
+            }
+
+            .topnav ul {
+                list-style: none;
+            }
+
+            .topnav ul li {
+                float: left;
+                width: 140px;
+                height: 60px;
+                text-align: center;
+                line-height: 50px;
+            }
+
+            .topnav ul li a {
+                color: white;
+                display: block;
+                text-decoration: none;
+                font-size: 17px;
+                padding: 5px;
+            }
+
+            .topnav a:hover {
+                background-color: rgb(7, 219, 216);
+                color: white;
+                transition: 700ms ease;
+            }
+
+            /* .topnav a.active {
+                background-color: #48bda6;
+                color: white;
+            } */
+
+            .dropdown-menu ul li {
+                background: rgb(56, 55, 55);
+                display: none;
+                animation: animate ls ease;
+            }
+
+            .dropdown-menu ul li a {
+                color: #fff;
+            }
+
+            .dropdown-menu ul li a:hover {
+                background: rgb(7, 219, 216);
+                color: white;
+            }
+
+            .topnav ul li:hover ul li {
+                display: block;
+            }
+
+            .container {
+                font-family: Arial, Helvetica, sans-serif;
+                color: black;
+                font-weight: bold;
+                position:absolute;
+                top: 36%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 70px;
+            }
+            .current-date {
+                font-family: Arial, Helvetica, sans-serif;
+                color: white;
+                font-weight: bold;
+                position:absolute;
+                top: 44%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 24px;
+            }
+            .search {
+                position:absolute;
+                top: 50%;
+                left: 21%;
+                width: 100%;
+                min-height: 100vh;
+                padding: 5%;
+                background-position: center;
+                background-size: cover;
+                /* display: flex;
+                align-items: center;
+                justify-content: center; */
+            }
+            .search-bar {
+                width: 100%;
+                max-width: 700px;
+                background: white;
+                display: flex;
+                align-items: center;
+                border-radius: 60px;
+                padding: 10px 20px;
+            }
+            .search-bar input {
+                background: transparent;
+                flex: 1;
+                border: 0;
+                outline: none;
+                padding: 24px 20px;
+                font-size: 20px;
+                color: black;
+            }
+            .search-bar button {
+                border: 0;
+                background-color: white;
+                background: white;
+                cursor: pointer;
+            }
+            .generate_recipes {
+                z-index: 2;
+                position:absolute;
+                left: 42%;
+                top: 78%;
+                display: inline-flex;
+                height: 50px;
+                width: 250px;
+                padding: 0;
+                border: 0;
+                outline: none;
+                border-radius: 5px;
+                overflow: auto;
+                font-family: Copperplate, Papyrus, fantasy;
+                font-size: 16px;
+                font-weight: 500;
+                background: #57e1c6;
+                cursor: pointer;
+            }
+
+            .generate_recipes:active {
+                background: #358b7a;
+            }
+
+            .button_text {
+                display: inline-flex;
+                align-items: center;
+                padding: 0 24px;
+                font-size: 24px;
+            }
+
+            body {
+                background-image: url(summer_day.jpg);
+                background-repeat: no-repeat;
+                background-size: cover;
+                height: 160vh;
+                padding: 50px;
+                ::-webkit-scrollbar {
+                width: 10px;
+                }
+
+                ::-webkit-scrollbar-track {
+                    border-radius: 5px;
+                    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.25);
+                }
+
+                ::-webkit-scrollbar-thumb {
+                    border-radius: 5px;
+                    box-shadow: lightgray;
+                }
+
+                ::-webkit-scrollbar-thumb:hover {
+                    background: #555; 
+                }
+            }
+
+        </style>
+        <script src="script.js" defer></script>
+    </head>
+    <body>
+        <div class="topnav">
+           <ul>
+                <li><a href="">Settings</a></li>
+                <li><a href="">Help</a></li>
+           </ul>
+        </div>
+    </body>
+</html>
