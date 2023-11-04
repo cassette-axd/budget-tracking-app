@@ -1,28 +1,28 @@
 from tkinter import *
 from datetime import datetime
 from expenses import Expenses
+import calendar
 
-# get the current time
-dt = datetime.now()
-# get the current day
-current_day = dt.strftime('%A')
-#print(current_day)
-
-max_budget = 0
-money_spent = 0
+budget = 2000
 
 def main():
-    print("Running Expense Tracker")
+    start_login()
+    # print("Running Expense Tracker")
+    expense_file_path = "expenses.csv"
 
     # Get user input for expense
+    get_user_budget()
     expense = get_user_expense()
-    expense_file_path = "expenses.csv"
 
     # Write their expense to a file
     save_expense_to_file(expense, expense_file_path)
 
     # Read file and summarize expense
-    summarize_expense(expense_file_path)
+    summarize_expense(expense_file_path, budget)
+
+def get_user_budget():
+    global budget 
+    budget = round(float(input("Enter your budget: $")), 2)
 
 def get_user_expense():
     expense_name = input("Enter expense name: ")
@@ -54,31 +54,80 @@ def get_user_expense():
 
 def save_expense_to_file(expense: Expenses, expense_file_path):
     with open(expense_file_path, "a") as f:
-        f.write(f"{expense.name}, ${expense.amount:.2f}, {expense.category}\n")
+        f.write(f"{expense.name},{expense.amount:.2f},{expense.category}\n")
 
-def summarize_expense(expense_file_path):
+def summarize_expense(expense_file_path, budget):
     print("Summarizing Expenses")
-    all_expenses = []
+    all_expenses: list[Expenses] = []
     with open(expense_file_path, "r") as f:
         lines = f.readlines()
         for line in lines:
-            # print(line)
             expense_name, expense_amount, expense_category = line.strip().split(",")
-            print(expense_name, expense_amount, expense_category)
+            line_expense = Expenses(
+                name=expense_name,
+                amount=float(expense_amount),
+                category=expense_category)
+            all_expenses.append(line_expense)
 
+    # organize by category. if no match, create a new category
+    amount_by_category = {}
+    for expense in all_expenses:
+        key = expense.category
+        if key in amount_by_category:
+            amount_by_category[key] += expense.amount
+        else:
+            amount_by_category[key] = expense.amount
+
+    print("Expense By Category")
+    for key, amount in amount_by_category.items():
+        print(f"    {key}: ${amount:.2f}")
+
+    # get the total budget and compare
+    total_spent = sum([ex.amount for ex in all_expenses])
+    print(f"Total Spent: ${total_spent:.2f}")
+    remaining_budget = budget - total_spent
+    if remaining_budget < 0:
+        print("Spening exceeded budget!")
+    else:
+        print(f"Remaining Budget: ${remaining_budget} left")
+    
+    # recommend a daily spending on the user based on how much money left they can spend
+    dt = datetime.now()
+    print(f"Date: {dt.month}, {dt.day}, {dt.year}")
+    days_in_month = calendar.monthrange(dt.year, dt.month)[1]
+    remaining_days = days_in_month - dt.day
+    daily_budget = remaining_budget / remaining_days
+    print(green(f"Recommended Spending Per Day: ${daily_budget:.2f}"))
+
+# make important text/data stand out in the terminal
+def green(text):
+    return f"\033[92m{text}\033[0m"
 
 # UI Setup
-# window = Tk()
-# window.title("Budget Tracker")
-# window.config(padx=50, pady=50, bg="white")
+def start_login():
+    window = Tk()
+    window.title("Budget Tracker")
+    window.config(padx=50, pady=50, bg="white")
 
-#canvas = Canvas(width=800, height=800)
-#canvas.grid(row=0,column=0, columnspan=2)
-#canvas.config(bg="white", highlightthickness=0)
+    canvas = Canvas(width=800, height=800)
+    canvas.grid(row=0,column=0, columnspan=2)
+    canvas.config(bg="white", highlightthickness=0)
+
+    window.mainloop()
+
+
+def load_new_page():
+    new_window = Tk()
+    new_window.title("Budget Tracker")
+    new_window.config(padx=50, pady=50, bg="white")
+
+    canvas = Canvas(width=800, height=800)
+    canvas.grid(row=0,column=0, columnspan=2)
+    canvas.config(bg="white", highlightthickness=0)
+
+    new_window.mainloop()
 
 # This will be true when were run this file directly only
 if __name__ == "__main__":
     main()
 
-
-#window.mainloop()
