@@ -6,7 +6,6 @@ import calendar
 budget = 2000
 
 def main():
-    start_login()
     # print("Running Expense Tracker")
     expense_file_path = "expenses.csv"
 
@@ -103,31 +102,60 @@ def summarize_expense(expense_file_path, budget):
 def green(text):
     return f"\033[92m{text}\033[0m"
 
+def login():
+    pass
+
+def save_info():
+    pass
+
+def find_password():
+    pass
+
 # UI Setup
-def start_login():
-    window = Tk()
-    window.title("Budget Tracker")
-    window.config(padx=50, pady=50, bg="white")
+window = Tk()
+window.title("Budget Tracker")
+window.config(padx=50, pady=50)
 
-    canvas = Canvas(width=800, height=800)
-    canvas.grid(row=0,column=0, columnspan=2)
-    canvas.config(bg="white", highlightthickness=0)
-
-    window.mainloop()
+canvas = Canvas(width=200, height=200)
+canvas.grid(column=1, row=0)
+# canvas.config(bg="white", highlightthickness=0)  
 
 
 def load_new_page():
+    window.destroy()
+
     new_window = Tk()
     new_window.title("Budget Tracker")
     new_window.config(padx=50, pady=50, bg="white")
-
+    
     canvas = Canvas(width=800, height=800)
-    canvas.grid(row=0,column=0, columnspan=2)
-    canvas.config(bg="white", highlightthickness=0)
+    canvas.grid(column=1, row=0)
+    canvas.config(bg="white", highlightthickness=0) 
 
-    new_window.mainloop()
+
+username_text = Label(text="Email:")
+username_text.grid(column=0, row=1)
+
+password_text = Label(text="Password:")
+password_text.grid(column=0, row=2)
+
+username_entry = Entry(width=30)
+username_entry.grid(column=1, row=1)
+
+password_entry = Entry(width=30)
+password_entry.grid(column=1, row=2)
+
+login_button = Button(text="LOGIN", width=28)
+login_button.grid(column=1, row=3)
+
+create_account_button = Button(text="Create New Account", width=28)
+create_account_button.grid(column=1, row=4)
+
+forgot_password_button = Button(text="Forgot Password?", width=10)
+forgot_password_button.grid(column=2, row=2)
 
 # This will be true when were run this file directly only
 if __name__ == "__main__":
     main()
 
+window.mainloop()
