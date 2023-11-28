@@ -11,19 +11,21 @@ class LoginWindow:
         canvas = Canvas(master, width=200, height=200)
         canvas.grid(column=1, row=0) 
 
-        email_text = Label(text="Email:")
-        email_text.grid(column=0, row=1)
+        username_text = Label(text="Username:")
+        username_text.grid(column=0, row=1)
 
         password_text = Label(text="Password:")
         password_text.grid(column=0, row=2)
 
-        username_entry = Entry(width=30)
-        username_entry.grid(column=1, row=1)
+        self.username = StringVar()
+        self.username_entry = Entry(textvariable=self.username, width=30)
+        self.username_entry.grid(column=1, row=1)
 
-        password_entry = Entry(width=30)
-        password_entry.grid(column=1, row=2)
+        self.password = StringVar()
+        self.password_entry = Entry(textvariable=self.password, width=30)
+        self.password_entry.grid(column=1, row=2)
 
-        login_button = Button(text="LOGIN", width=28)
+        login_button = Button(text="LOGIN", width=28, command=self.login)
         login_button.grid(column=1, row=3)
 
         create_account_button = Button(text="Create New Account", width=28, command=self.create_new_account)
@@ -34,6 +36,30 @@ class LoginWindow:
 
     def create_new_account(self):
         new_account_window = CreateAccountWindow()
+
+    # try to log the user into their account
+    def login(self):
+            try:
+                with open("data.json", "r") as data_file:
+                    # read data
+                    data = json.load(data_file)
+            except FileNotFoundError:
+                messagebox.showinfo(title="Error", message="Error""\nData File not Found")
+            else:
+                username = self.username_entry.get()
+                password = self.password_entry.get()
+
+                # check if website is stored in data
+                if self.username_entry.get() == "" or self.password_entry == "":
+                    messagebox.showinfo(title="Error", message="Error""\nSome of your entries are blank")
+                if username in data:
+                    # get the info for that website in the nested dictionary and display it in a popup
+                    if data[username]["Password"] == password:
+                        messagebox.showinfo(title="Success", message="Login Successful")
+                    else:
+                        messagebox.showinfo(title="Error", message="Invalid Password")
+                else:
+                    messagebox.showinfo(title="Error", message="Invalid Username")
 
 # Open a new window for user to create a new account
 class CreateAccountWindow:
