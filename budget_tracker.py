@@ -1,11 +1,17 @@
 from tkinter import *
 from datetime import datetime
 from expenses import Expenses
+import windows
 import calendar
 
 budget = 2000
+root = Tk()
+root.title("Budget Tracker")
 
 def main():
+
+    windows.LoginWindow(root)
+
     # print("Running Expense Tracker")
     expense_file_path = "expenses.csv"
 
@@ -105,3 +111,6 @@ def green(text):
 # This will be true when were run this file directly only
 if __name__ == "__main__":
     main()
+
+# start the GUI
+root.mainloop

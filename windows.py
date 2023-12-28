@@ -3,6 +3,9 @@ from tkinter import *
 from tkinter import messagebox
 import re
 import json
+import smtplib
+import datetime as dt
+import random
 
 #first page to open up where users can sign in to their account
 class LoginWindow:
@@ -31,11 +34,16 @@ class LoginWindow:
         create_account_button = Button(text="Create New Account", width=28, command=self.create_new_account)
         create_account_button.grid(column=1, row=4)
 
-        forgot_password_button = Button(text="Forgot Password?", width=10)
+        forgot_password_button = Button(text="Forgot Password?", width=10, command=self.forgot_password)
         forgot_password_button.grid(column=2, row=2)
 
     def create_new_account(self):
         new_account_window = CreateAccountWindow()
+
+    def forgot_password(self):
+        enter_email_window = EnterEmailWindow()
+        
+        
 
     # try to log the user into their account
     def login(self):
@@ -61,9 +69,83 @@ class LoginWindow:
                 else:
                     messagebox.showinfo(title="Error", message="Invalid Username")
 
+
+# open a new window to enter email
+class EnterEmailWindow:
+    def __init__(self):
+        top = Toplevel()
+        canvas = Canvas(top, width=200, height=200)
+        canvas.grid(column=1, row=0) 
+        
+        email_text = Label(top, text="Enter Email:")
+        email_text.grid(column=0, row=2)
+
+        self.email = StringVar()
+        self.email_entry = Entry(top, textvariable=self.email, width=30)
+        self.email_entry.grid(column=1, row=2)
+
+        submit_email_button = Button(top, text="submit", width=6, command=self.submit_email)
+        submit_email_button.grid(column=2, row=2)
+
+    def submit_email(self):
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+        if str(re.match(regex, self.email.get())) == "None":
+            messagebox.showinfo(title="Error", message="Error""\nEmail is invalid")
+
+        try:
+            with open("data.json", "r") as data_file:
+                # read data
+                data = json.load(data_file)
+        except FileNotFoundError:
+                messagebox.showinfo(title="Error", message="Error""\nNo accounts have been created")
+        else:
+            # check if input is stored in data
+            found = FALSE
+            for user, user_data in data.items():
+                if user_data['Email'] == self.email.get():
+                    # messagebox.showinfo(title="Success", message="sent email")
+                    create_new_password_window = ResetPassword()
+                    found = TRUE
+                    self.email_entry.delete(0, END)
+                    break
+            if found == FALSE:
+                messagebox.showinfo(title="Error", message="Error""\ncouldn't find email")
+
+
+class ResetPassword:
+    def __init__(self):
+        top = Toplevel()
+        canvas = Canvas(top, width=200, height=200)
+        canvas.grid(column=1, row=0)
+        password_text = Label(top, text="Create new Password:")
+        password_text.grid(column=0, row=2)
+
+        password_text_2 = Label(top, text="Re-Enter New Password:")
+        password_text_2.grid(column=0, row=3)
+
+        self.password1 = StringVar()
+        self.password_entry = Entry(top, textvariable=self.password1, width=30)
+        self.password_entry.grid(column=1, row=2)
+
+        self.password2 = StringVar()
+        self.password_entry_2 = Entry(top, textvariable=self.password2, width=30)
+        self.password_entry_2.grid(column=1, row=3)
+
+        submit_passwords_button = Button(top, text="submit", width=28, command=self.reset_password)
+        submit_passwords_button.grid(column=1, row=4)
+
+    def reset_password(self):
+        if self.password1.get() != self.password2.get():
+            messagebox.showinfo(title="Error", message="Error""\nPasswords don't match")
+        elif self.password1.get() == "" or self.password2.get() == "":
+            messagebox.showinfo(title="Error", message="Error""\nSome of your entries are blank")
+        else:
+            messagebox.showinfo(title="Reminder", message="Reminder""\nEdit the JSON file to rewrite the user's password")
+
+
+
 # Open a new window for user to create a new account
 class CreateAccountWindow:
-    import re
     def __init__(self):
         top = Toplevel()
         canvas = Canvas(top, width=200, height=200)
@@ -157,8 +239,8 @@ class CreateAccountWindow:
         else:
             # if all input is valid, store it in a dictionary
             self.save_info()
-        
-root = Tk()
-root.title("Budget Tracker")
-main_window = LoginWindow(root)
-root.mainloop()
+                        
+# root = Tk()
+# root.title("Budget Tracker")
+# main_window = LoginWindow(root)
+# root.mainloop()
