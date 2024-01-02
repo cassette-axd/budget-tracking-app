@@ -104,16 +104,17 @@ class EnterEmailWindow:
             for user, user_data in data.items():
                 if user_data['Email'] == self.email.get():
                     # messagebox.showinfo(title="Success", message="sent email")
-                    create_new_password_window = ResetPassword()
+                    create_new_password_window = ResetPassword(user_data['Email'])
                     found = TRUE
                     self.email_entry.delete(0, END)
                     break
             if found == FALSE:
                 messagebox.showinfo(title="Error", message="Error""\ncouldn't find email")
 
-
+# Update password after confirming email
 class ResetPassword:
-    def __init__(self):
+    def __init__(self, email):
+        self.email = email
         top = Toplevel()
         canvas = Canvas(top, width=200, height=200)
         canvas.grid(column=1, row=0)
@@ -140,9 +141,37 @@ class ResetPassword:
         elif self.password1.get() == "" or self.password2.get() == "":
             messagebox.showinfo(title="Error", message="Error""\nSome of your entries are blank")
         else:
-            messagebox.showinfo(title="Reminder", message="Reminder""\nEdit the JSON file to rewrite the user's password")
+            # messagebox.showinfo(title="Reminder", message="Reminder""\nEdit the JSON file to rewrite the user's password")
+            try:
+                with open("data.json", "r") as data_file:
+                    # read data
+                    data = json.load(data_file)
+            except FileNotFoundError:
+                messagebox.showinfo(title="Error", message="Error""\nData File not Found")
+            else:
+                for user, user_data in data.items():
+                    if user_data['Email'] == self.email:
+                        updated_account = {
+                            user: {
+                                "Email": self.email,
+                                "Password":  self.password1.get()
+                            }
+                        }
+                try:
+                    with open("data.json", "r") as data_file:
+                        # read old data
+                        data = json.load(data_file)
+                # create a new json data file if it doesn't currently exist
+                except FileNotFoundError:
+                    with open("data.json", "w") as data_file:
+                        json.dump(updated_account, data_file, indent=4)
+                else:
+                    # update old data with new data
+                    data.update(updated_account)
 
-
+                    with open("data.json", "w") as data_file:
+                        json.dump(data, data_file, indent=4)
+                    # print("password updated")
 
 # Open a new window for user to create a new account
 class CreateAccountWindow:
